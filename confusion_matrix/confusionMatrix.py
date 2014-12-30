@@ -34,7 +34,7 @@ def plot_confusion_matrix(cm, title='Confusion Matrix', cmap = plt.cm.binary):
     plt.xlabel('Predicted label')
 cm = confusion_matrix(y_true, y_pred)
 np.set_printoptions(precision=2)
-cm_normalized = cm.astype('float')/cm.sum(axis=1)[:, np.newaxis]
+cm_normalized = cm.astype('float')/cm.sum(axis=0)[:, np.newaxis]
 
 plt.figure(figsize=(12,8), dpi=120)
 #set the fontsize of label.
