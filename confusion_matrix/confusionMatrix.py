@@ -1,13 +1,20 @@
 '''compute confusion matrix
-labels.txt: contain label name.
+labels.txt: contain labels name.
 predict.txt: predict_label true_label
+
 '''
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
+import sys
+
+if len(sys.argv) != 4:
+    print "Usage: python confusion_matrix.py label_name.txt predict.txt jpg\nlabel_name.txt: contain labels name;\npredict.txt: predict_label true_label;\njpg: save the jpg\n"
+    sys.exit()
+
 #load labels.
 labels = []
-file = open('labels.txt', 'r')
+file = open(sys.argv[1], 'r')
 lines = file.readlines()
 for line in lines:
 	labels.append(line.strip())
@@ -16,7 +23,7 @@ file.close()
 y_true = []
 y_pred = []
 #load true and predict labels.
-file = open('predict.txt', 'r')
+file = open(sys.argv[2], 'r')
 lines = file.readlines()
 for line in lines:
 	y_true.append(int(line.split(" ")[1].strip()))
@@ -48,7 +55,7 @@ x, y = np.meshgrid(ind_array, ind_array)
 for x_val, y_val in zip(x.flatten(), y.flatten()):
     c = cm_normalized[y_val][x_val]
     if (c > 0.01):
-	plt.text(x_val, y_val, "%0.2f" %(c,), color='red', fontsize=7, va='center', ha='center')
+	plt.text(x_val, y_val, "%0.2f" %(c,), color='white', fontsize=10, va='center', ha='center')
 #offset the tick
 plt.gca().set_xticks(tick_marks, minor=True)
 plt.gca().set_yticks(tick_marks, minor=True)
@@ -59,4 +66,6 @@ plt.gcf().subplots_adjust(bottom=0.15)
 
 plot_confusion_matrix(cm_normalized, title='Normalized confusion matrix')
 #show confusion matrix
-plt.show()
+#plt.show()
+#save jpg
+plt.savefig(sys.argv[3], dpi=100)
