@@ -69,7 +69,7 @@ if __name__ == "__main__":
   print 'test iterations len: ', len(test_iterations)
   print 'test accuracy len: ', len(test_accuracy)
 
-  print test_iterations, test_accuracy
+  print test_loss
   if len(test_iterations) != len(test_accuracy): #awaiting test...
     print 'mis-match'
     print len(test_iterations[0:-1])
