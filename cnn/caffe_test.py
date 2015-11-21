@@ -16,7 +16,7 @@ args = parser.parse_args()
 
 
 #read image list from file, one image one line.
-dim = 50
+dim = 1
 caffe_root = args.caffe_dir
 import sys
 sys.path.insert(0, caffe_root + '/python/')
@@ -76,7 +76,7 @@ for i in range(0, n_image):
                         true_id = 0
                         if(imageList_label[j] != 0):
                             true_id = 1
-                        output3.write(imageList_name[j] + " " + str(predict_id) + " " + str(true_id))
+                        output3.write(imageList_name[j] + " " + str(predict_id) + " " + str(true_id) + "\n")
 		imageList = []
 		imageList_name = []
 		imageList_label = []
