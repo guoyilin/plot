@@ -2,8 +2,6 @@
 labels.txt: contain labels name.
 predict.txt: img predict_label true_label
 '''
-#since the predict and ground true both lack 28, we add the following record
-#add /data/yilin_guo/hongyuan/test_data/detect_imgs/9_00903.png.jpg_50463.jpg 28 28
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
@@ -14,7 +12,6 @@ parser = argparse.ArgumentParser(description='confusion matrix')
 parser.add_argument('label_name', help='label_name.txt')
 parser.add_argument('predict_file', help='predict result file')
 parser.add_argument('save_jpg', help='save jpg')
-#parser.add_argument('isNorm', help='normalized or not', type=bool)
 parser.add_argument('--norm', dest='norm', action='store_true')
 parser.add_argument('--noNorm', dest='norm', action='store_false')
 parser.set_defaults(norm=True)
