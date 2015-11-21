@@ -1,20 +1,28 @@
 '''compute confusion matrix
 labels.txt: contain labels name.
-predict.txt: predict_label true_label
-
+predict.txt: img predict_label true_label
 '''
+#since the predict and ground true both lack 28, we add the following record
+#add /data/yilin_guo/hongyuan/test_data/detect_imgs/9_00903.png.jpg_50463.jpg 28 28
 from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
 import sys
+import argparse
 
-if len(sys.argv) != 4:
-    print "Usage: python confusion_matrix.py label_name.txt predict.txt jpg\nlabel_name.txt: contain labels name;\npredict.txt: predict_label true_label;\njpg: save the jpg\n"
-    sys.exit()
+parser = argparse.ArgumentParser(description='confusion matrix')
+parser.add_argument('label_name', help='label_name.txt')
+parser.add_argument('predict_file', help='predict result file')
+parser.add_argument('save_jpg', help='save jpg')
+#parser.add_argument('isNorm', help='normalized or not', type=bool)
+parser.add_argument('--norm', dest='norm', action='store_true')
+parser.add_argument('--noNorm', dest='norm', action='store_false')
+parser.set_defaults(norm=True)
+args = parser.parse_args()
 
 #load labels.
 labels = []
-file = open(sys.argv[1], 'r')
+file = open(args.label_name, 'r')
 lines = file.readlines()
 for line in lines:
 	labels.append(line.strip())
@@ -23,11 +31,11 @@ file.close()
 y_true = []
 y_pred = []
 #load true and predict labels.
-file = open(sys.argv[2], 'r')
+file = open(args.predict_file, 'r')
 lines = file.readlines()
 for line in lines:
-	y_true.append(int(line.split(" ")[1].strip()))
-	y_pred.append(int(line.split(" ")[0].strip()))
+	y_true.append(int(line.split(" ")[2].strip()))
+	y_pred.append(int(line.split(" ")[1].strip()))
 file.close()
 tick_marks = np.array(range(len(labels))) + 0.5
 def plot_confusion_matrix(cm, title='Confusion Matrix', cmap = plt.cm.binary):
@@ -40,22 +48,22 @@ def plot_confusion_matrix(cm, title='Confusion Matrix', cmap = plt.cm.binary):
     plt.ylabel('True label')
     plt.xlabel('Predicted label')
 cm = confusion_matrix(y_true, y_pred)
-print cm
 np.set_printoptions(precision=2)
-cm_normalized = cm.astype('float')/cm.sum(axis=1)[:, np.newaxis]
-print cm_normalized
-plt.figure(figsize=(12,8), dpi=120)
+if(args.norm):
+	cm = cm.astype('float')/cm.sum(axis=1)[:, np.newaxis]
+plt.figure(figsize=(12,8), dpi=200)
 #set the fontsize of label.
 #for label in plt.gca().xaxis.get_ticklabels():
 #    label.set_fontsize(8)
 #text portion
 ind_array = np.arange(len(labels))
 x, y = np.meshgrid(ind_array, ind_array)
-
 for x_val, y_val in zip(x.flatten(), y.flatten()):
-    c = cm_normalized[y_val][x_val]
-    if (c > 0.01):
-	plt.text(x_val, y_val, "%0.2f" %(c,), color='white', fontsize=10, va='center', ha='center')
+    c = cm[y_val][x_val]
+    if(c > 1):
+    	plt.text(x_val, y_val, "%d" %(c,), color='red', fontsize=10, va='center', ha='center')
+    elif(c >= 0.009):
+       plt.text(x_val, y_val, "%0.2f" %(c,), color='red', fontsize=7, va='center', ha='center')
 #offset the tick
 plt.gca().set_xticks(tick_marks, minor=True)
 plt.gca().set_yticks(tick_marks, minor=True)
@@ -64,8 +72,8 @@ plt.gca().yaxis.set_ticks_position('none')
 plt.grid(True, which='minor', linestyle='-')
 plt.gcf().subplots_adjust(bottom=0.15)
 
-plot_confusion_matrix(cm_normalized, title='Normalized confusion matrix')
+plot_confusion_matrix(cm, title='confusion matrix')
 #show confusion matrix
 #plt.show()
 #save jpg
-plt.savefig(sys.argv[3], dpi=100)
+plt.savefig(args.save_jpg, dpi=200)
