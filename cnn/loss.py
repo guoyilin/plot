@@ -55,6 +55,10 @@ if __name__ == "__main__":
     # training loss
     if '] Iteration ' in line and 'loss = ' in line:
       arr = re.findall(r'ion \b\d+\b,', line)
+      print int(arr[0].strip(',')[4:])
+      if(int(arr[0].strip(',')[4:]) < 20000):
+     	continue
+      print float(line.strip().split(' = ')[-1])
       training_iterations.append(int(arr[0].strip(',')[4:]))
       training_loss.append(float(line.strip().split(' = ')[-1]))
     # testing loss
@@ -83,20 +87,20 @@ if __name__ == "__main__":
   host = host_subplot(111)#, axes_class=AA.Axes)
   plt.subplots_adjust(right=0.75)
 
-  par1 = host.twinx()
+#  par1 = host.twinx()
 
   host.set_xlabel("iterations")
   host.set_ylabel("log loss")
-  par1.set_ylabel("validation accuracy")
+#  par1.set_ylabel("validation accuracy")
  
   p1, = host.plot(training_iterations, training_loss, label="training log loss")
-  p3, = host.plot(test_iterations, test_loss, label="valdation log loss")
-  p2, = par1.plot(test_iterations, test_accuracy, label="validation accuracy")
+#  p3, = host.plot(test_iterations, test_loss, label="valdation log loss")
+#  p2, = par1.plot(test_iterations, test_accuracy, label="validation accuracy")
 
   host.legend(loc=5)
 
   host.axis["left"].label.set_color(p1.get_color())
-  par1.axis["right"].label.set_color(p2.get_color())
+#  par1.axis["right"].label.set_color(p2.get_color())
 
   plt.draw()
   #plt.show()

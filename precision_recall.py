@@ -18,6 +18,9 @@ if __name__ == "__main__":
         y_predict.append(float(line.split(" ")[1].strip()))
     f.close()
     precision, recall, thresholds = metrics.precision_recall_curve(y_true, y_predict, pos_label=1)
+    for i in range(0,len(recall)):
+    	if(recall[i] < 0.96 and recall[i] > 0.95):
+		print precision[i], recall[i], thresholds[i]
     average_precision = metrics.average_precision_score(y_true, y_predict)
 
     # Plot of a ROC curve for a specific class

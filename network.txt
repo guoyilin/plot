@@ -1,0 +1,8 @@
+conv1 7 2
+pool1 3 2
+conv2 5 2
+pool2 3 2
+conv3 3 1
+conv4 3 1
+conv5 3 1
+rpn 3 1
